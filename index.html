@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <link rel="stylesheet" type="text/css" href="">
+        <style type="text/css">
+            *{
+	            margin: 0;
+	            padding: 0;
+                }
+            body img{
+                width: 100%;
+                height: 100%;
+            }
+            .from{
+	            width: 340px;
+	            background: white;
+	            position: absolute;
+	            top:25%;
+	            left: 10%;
+	            border-radius: 50px;
+                opacity: 0.8;
+                }
+                .item{
+                    width: 337px;
+                    height: 60px;
+                    background: #eeeeee;
+                    border-radius: 50px;
+                }
+                .item div{
+                    width: 80px;
+                    height: 60px;
+                    display: inline-block;
+                    color: black;
+                    font-size: 18px;
+                    text-align: center;
+                    line-height: 60px;
+                    cursor: pointer;
+                    border-radius: 50px;
+                    margin-left: 55px;
+                    background-color: #00dd60;
+                }
+                .content{
+                    width: 100%;
+                    border-radius: 50px;
+                }
+                .content div{
+                    margin: 10px 30px;
+                    text-align: left;
+                    display: none;
+                    border-radius: 50px;
+                }
+                p{
+                    text-align: center;
+                    color: #4a4a4a;
+                    margin-top: 30px;
+                    margin-bottom: 6px;
+                    font-size: 15px;
+                    opacity: 1;
+                }
+                .content input[type = "text"], .content input[type = "password"]{
+                    width: 80%;
+                    height: 40px;
+                    border-radius: 3px;
+                    border: 2px solid #00dd60;
+                    padding: 0 10px 0 20px;
+                    box-sizing: border-box;
+                    margin-left: 20px;
+                }
+                .content button[type = "button"]{
+                    margin-top: 40px;
+                    width: 100%;
+                    height: 40px;
+                    border-radius: 5px;
+                    color: white;
+                    border: 1px solid #adadad;
+                    background: #00dd60;
+                    cursor: pointer;
+                    letter-spacing: 4px;
+                    margin-bottom: 40px;
+                }
+                .aption{
+                    background: white;
+                }
+                .item div:hover{
+                    background: f6f6f6;
+                }
+                span.help-block{
+                    color: red!important;
+                    display: none;
+                }
+        </style>
+    </head>
+    <body><img src="background.jpeg">
+		<div class="from">
+			<div class="item">
+				<div class="aption">登录</div>
+				<div>注册</div>
+			</div>
+			<div class="content">
+				<div style="display: block;">
+					<p>账号</p>
+					<input type="text" id="username" placeholder="please enter your username" />
+					<span id="helpBlock1" class="help-block">用户名不能为空</span>
+					<p>密码</p>
+					<input type="password" id="password" placeholder="please enter your password" />
+					<span id="helpBlock2" class="help-block">密码不能为空</span>
+					<br />
+					<span id="helpBlock3" class="help-block">用户名或密码错误</span>
+					<button type="button" id="login" onclick="Login()">登录</button>
+				</div>
+				<div>
+					<p>用户名</p>
+					<input type="text" id ="RegisterId" placeholder="username" />
+					<span id="helpBlock4" class="help-block">用户名不能为空</span>
+					<p>昵称</p>
+					<input type="text" id = "RegisterUsername"placeholder="name" />
+					<span id="helpBlock5" class="help-block">昵称不能为空</span>
+					<p>密码</p>
+					<input type="password" id = "RegisterPassword" placeholder="password" />
+					<span id="helpBlock6" class="help-block">密码不能为空</span>
+					<p>确认密码</p>
+					<input type="password" id = "RegisterSurePassword" placeholder="password" />
+					<span id="helpBlock7" class="help-block">确认密码不能为空</span>
+					<br />
+					<span id="helpBlock8" class="help-block">两次密码不一致</span>
+					<button type="button" id="register" onclick="Register()">注册</button>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+            window.onload = function(){
+	var item = document.getElementsByClassName("item");
+	var it = item[0].getElementsByTagName("div");
+	
+	var content = document.getElementsByClassName("content");
+	var con = content[0].getElementsByTagName("div");
+	
+	for(let i = 0;i<it.length;i++){
+		it[i].onclick = function(){
+			for(let j = 0;j<it.length;j++){
+				it[j].className = '';
+				con[j].style.display = "none";
+			}
+			this.className = "active";
+			it[i].index = i;
+			con[i].style.display = "block";
+		}
+	}
+}
+            var xmlHttp = new XMLHttpRequest();
+var jsonObj = null;
+xmlHttp.onload = function(){
+	if(xmlHttp.readyState == 4){//表示响应完成
+		if(xmlHttp.status == 200){//响应码为200，表示服务器正确响应
+			//获取响应内容
+			txt = xmlHttp.responseText;
+			//把json字符串解析成json对象
+			jsonObj = JSON.parse(txt);
+			// console.info(jsonObj)
+		}else{
+			console.info('数据返回失败！状态代码: '+xmlHttp.status+'状态信息:'+xmlHttp.statusText);
+		}
+	}
+}
+	xmlHttp.open('GET','https://db-api.amarea.cn/users',true);
+	xmlHttp.send();
+
+function Login(){
+			var nameInput = document.getElementById("username");
+			var pwdInput = document.getElementById("password");
+			var hb1 = document.getElementById("helpBlock1");
+			var hb2 = document.getElementById("helpBlock2");
+			var hb3 = document.getElementById("helpBlock3");
+			var uname = nameInput.value;
+			var pwd = pwdInput.value;
+			//判断是否为空
+			if(!uname){
+				hb1.style.display = 'block';
+			}else {
+				hb1.style.display = 'none';
+			}
+			if(!pwd){
+				hb2.style.display = 'block';
+			}else{
+				hb2.style.display = 'none';
+			}
+			if(uname && pwd){ //登录成功
+				for(var i=0;i<jsonObj.length;i++){
+					if( uname==jsonObj[i]['id'] && pwd==jsonObj[i]['password'])
+					{
+						hb3.style.display = 'none';
+						confirm(jsonObj[i]['id']+"确认登录？");
+                        // setCookie("uesename",uname,30);
+                        window.localStorage.setItem("key",jsonObj[i]['id']);
+						window.location.href='success.html?name='+uname+'&psw='+pwd;
+					}
+
+					else{
+						hb3.style.display = 'block';
+					}
+				}
+			}
+}
+    function setCookie(cname,cvalue,exdays){
+        var d=new Date();
+        d.setTime(d.getTime()+(exdays*24*60*60*1000));
+        var expires = "expires="+d.toGMTString();
+        document.cookie = cname+"="+cvalue+";"+expires;
+    }
+    function Register(){
+                var ReIdInput = document.getElementById("RegisterId");
+                var ReNameInput = document.getElementById("RegisterUsername");
+                var RePasswordInput = document.getElementById("RegisterPassword");
+                var ReSurePasswordInput = document.getElementById("RegisterSurePassword");
+                var hb4 = document.getElementById("helpBlock4");
+                var hb5 = document.getElementById("helpBlock5");
+                var hb6 = document.getElementById("helpBlock6");
+                var hb7 = document.getElementById("helpBlock7");
+                var hb8 = document.getElementById("helpBlock8");
+                console.info(ReNameInput.value);
+                if(!ReIdInput.value){
+                    hb4.style.display = 'block';
+                }else{
+                    hb4.style.display = 'none';
+                }
+                if(!ReNameInput.value){
+                    hb5.style.display = 'block';
+                }else{
+                    hb5.style.display = 'none';
+                }
+                if(!RePasswordInput.value){
+                    hb6.style.display = "block";
+                }else{
+                    hb6.style.display = 'none';
+                }
+                if(!ReSurePasswordInput.value){
+                    hb7.style.display = "block";
+                }else{
+                    hb7.style.display = 'none';
+                }
+                if(RePasswordInput.value && ReSurePasswordInput.value){
+                    if(RePasswordInput.value != ReSurePasswordInput.value){
+                        hb8.style.display = "block";
+                    }else{
+                        hb8.style.display = "none";
+					    const myHeaders = new Headers()
+					    myHeaders.append("Content-Type", "application/json")
+					    let requestOptions = {
+					        method: "POST",
+					        headers: myHeaders,
+					        redirect: "follow",
+					            }
+					requestOptions.body = JSON.stringify({id: ReIdInput.value,password: ReSurePasswordInput.value,name: ReNameInput.value,tasks: [],   // 初始化一个空的待办清单
+					});
+					fetch(`https://db-api.amarea.cn/users`, requestOptions) // 这里的网址没有id
+					.then(response => response.json())
+					.then(data => console.log(data.id))  //新创建后的数据的id
+					.catch(err => console.log(err)) 
+					alert("注册成功！");
+                    window.location.reload()
+				}
+			}			
+}
+        </script>
+	</body>
+</html>

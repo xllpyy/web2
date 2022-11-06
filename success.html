@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <style type="text/css">
+            #search{
+                width: 300px;
+                height: 100px;
+                position: absolute;
+                left: 40%;
+                top: 40%;
+                font-size: 20px;
+                background: linear-gradient(to right, red, orange, yellow, green, cyan, blue,  purple);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                animation:  hue 3s linear infinite;
+            }
+            @keyframes hue {
+                0% {
+                    filter: hue-rotate(0deg);
+                        }
+                100% {
+                    filter: hue-rotate(360deg);
+                         }
+}
+        </style>
+    </head>
+    <body>
+        <div id="search">欢迎光临bro！</div>
+            <script type="text/javascript">                
+                var xmlHttp = new XMLHttpRequest();
+                var search=document.getElementById('search');
+                var txt = null;
+                var jsonObj = null;
+                xmlHttp.onload = function(){
+            if(xmlHttp.readyState ==4) {
+                if(xmlHttp.status ==200){
+                    txt = xmlHttp.responseText;
+                    jsonObj =JSON.parse(txt);
+                    for(let i=0;i<jsonObj.length;i++){
+                        console.log(jsonObj[i]['name']);
+                    }
+                }
+                }
+                else{
+                    console.info('数据返回失败！状态代码：'+xmlHttp.status+'状态信息'+xmlHttp.statusText);
+                }
+            }
+                xmlHttp.open('Get','https://db-api.amarea.cn/users',true);
+                xmlHttp.send();
+                console.log(window.localStorage.getItem("key"));
+                 let user = window.localStorage.getItem("key");
+                 search.innerHTML = search.innerHTML+user;
+            </script>
+    </body>
+</html>
